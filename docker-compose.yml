@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  angular-app:
+    image: proxibanque-angular:latest
+    build:
+      context: ../projetFinalProxibanque-front-yb-mb-br/ # Specify the correct path to the Angular app repository
+      dockerfile: Dockerfile
+    container_name: angular-app
+    ports:
+      - "80:80" # Map container port 80 to host port 80
+    #env_file:
+    # - .env
+    depends_on:
+      - spring-boot-app
+
+  spring-boot-app:
+    image: proxibanque-spring-boot:latest
+    build:
+      context: projetFinalProxibanque-webservice-yb-mb-br/ # Specify the correct path to the Spring Boot app repositor
+      dockerfile: Dockerfile
+    container_name: spring-boot-app
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${SPRING_JPA_HIBERNATE_DDL_AUTO}
+    ports:
+      - "8080:8080"
+
+  db:
+    image: 'postgres:16-alpine'
+    container_name: db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
