@@ -20,38 +20,43 @@ docker build -t proxibanque-spring-boot:latest
 ```bash
 docker-compose up
 ```
+> **Caution: Important Note**
+>
+> Please be aware of the following:
+>
+> - angular-app docker container is configured in docker-compose to run on port 80, be sure that nothing is already running on port 80 (like apache...).
+>- Show processes running on port 80:
+>
+>```bash
+>sudo netstat -tuln | grep 80
+>```
+>or
+>
+>```bash
+>sudo lsof -i :80
+>```
+>
+>- Stop a process on a port:
+>```bash
+>sudo kill <PID>
+>```
+>
+>- Kill all processes of port 80:
+>```bash
+>sudo killall -9 -v $(sudo lsof -t -i:80)
+>```
+>
+>or
+>
+>```bash
+>sudo pkill -f ":80"
+>```
+>***
+>
 
 Useful Docker Commands:
 
 - Show the IP address of a Docker container:
 ```bash
 docker-compose exec angular-app hostname -i
-```
-
-- Show processes running on port 80:
-
-```bash
-sudo netstat -tuln | grep 80
-```
-
-or
-
-```bash
-sudo lsof -i :80
-```
-
-- Stop a process on a port:
-```bash
-sudo kill <PID>
-```
-
-- Kill all processes of port 80:
-```bash
-sudo killall -9 -v $(sudo lsof -t -i:80)
-```
-
-or
-
-```bash
-sudo pkill -f ":80"
 ```
