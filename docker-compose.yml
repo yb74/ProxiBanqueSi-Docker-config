@@ -8,16 +8,14 @@ services:
       dockerfile: Dockerfile
     container_name: angular-app
     ports:
-      - "80:80" # Map container port 80 to host port 80
-    #env_file:
-    # - .env
+      - "4200:4200" # Map container port 4200 to host port 4200
     depends_on:
       - spring-boot-app
 
   spring-boot-app:
     image: proxibanque-spring-boot:latest
     build:
-      context: projetFinalProxibanque-webservice-yb-mb-br/ # Specify the correct path to the Spring Boot app repositor
+      context: ../projetFinalProxibanque-webservice-yb-mb-br/ # Specify the correct path to the Spring Boot app repositor
       dockerfile: Dockerfile
     container_name: spring-boot-app
     depends_on:
@@ -42,3 +40,6 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+
+# just run "docker-compose up" command to launch the container
+# to clear the containers and images use this command "docker-compose down --rmi all"
